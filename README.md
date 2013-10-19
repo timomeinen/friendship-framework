@@ -5,4 +5,4 @@ Das Friendship-Framework (FF) ist eine erweiterte Zugriffssteuerung für Java-An
 
 Das Framework kann in allen Java-Anwendungen verwendet werden, die mit Hilfe des eingesetzten aspektorientierten Compilers übersetzt werden können. Zur Konfiguration (und damit das Erstellen der Regelwerke der Zugriffskontrolle) werden Annotationen eingesetzt.
 
-Die Funktionen und Möglichkeiten werden in meiner Masterarbeit im Kapitel 4 vorgestellt.
+Die Funktionen und Möglichkeiten werden in meiner Masterarbeit im Kapitel 4 vorgestellt: [Masterarbeit von Timo Meinen](http://timomeinen.de/development/Masterarbeit_Timo_Meinen_final.pdf)
