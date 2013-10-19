@@ -1,0 +1,3 @@
+grant {
+ permission de.timomeinen.master.permissions.FriendshipPermission "de.timomeinen.master.permissions.FriendshipClass", "de.timomeinen.master.permissions.test.Friend";
+};

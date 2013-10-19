@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="My Project" default="build" basedir=".">
+
+	<property name="friendshipframework" location="../Friendship/dist/Friendship.jar"/>
+	<property name="spooned" location="generated.friends"/>
+	<property name="bin" location="bin"/>
+	
+	<target name="clean">
+		<echo>Cleaning:</echo>
+		<echo>=> ${bin}</echo>
+		<delete dir="${bin}" />
+		<echo>=> ${spooned}</echo>
+		<delete dir="${spooned}" />
+	</target>
+	
+	<target name="init">
+		<path id="ajde.classpath">
+			<pathelement path="lib/aspectjweaver.jar" />
+			<pathelement path="lib/aspectjrt.jar" />
+			<pathelement path="lib/aspectjtools.jar" />
+		</path>
+		<taskdef resource="org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties">
+			<classpath refid="ajde.classpath" />
+		</taskdef>
+	</target>
+		
+	<target name="MakeFriends">
+		<path id="spoon.classpath">
+			<pathelement path="lib/spoon.jar"/>
+			<pathelement path="lib/friendspoon.jar"/>
+			<pathelement path="${friendshipframework}"/>
+			<pathelement path="lib/JSAP-2.1.jar"/>
+			<pathelement path="lib/org.eclipse.jdt.core_3.3.1.v_780_R33x.jar"/>
+		</path>
+		<taskdef name="spoon" classname="spoon.SpoonTask" classpathref="spoon.classpath" />
+		<spoon classpathref="spoon.classpath" verbose="true" output="${spooned}" fork="false">
+			<sourceSet dir="src" />
+			<processor type="de.timomeinen.master.friendship.spoon.FriendSpoon"/>
+        </spoon>
+		<echo>Friendly access created.</echo>
+	</target>
+	
+	
+	<target name="build" depends="init,MakeFriends">
+		<delete dir="${bin}" />
+		<mkdir dir="${bin}" />
+		<path id="user.classpath">
+			<!-- add additional classpath entries here -->
+			<pathelement path="${friendshipframework}" />
+		</path>
+		<path id="aspect.classpath">
+			<!-- Friendship Framework Aspekte -->
+			<pathelement path="${friendshipframework}" />
+		</path>
+		<!-- read additional ajc options from a file if required -->
+		<property name="ajcArgFile" value="" />
+		<!-- fork the compiler -->
+		<iajc destDir="${bin}" failonerror="true" argfiles="" verbose="true" fork="true" maxmem="512m" source="1.5">
+			<forkclasspath refid="ajde.classpath" />
+			<forkclasspath refid="user.classpath" />
+			<aspectpath refid="aspect.classpath" />
+			<src path="${spooned}" />
+		</iajc>
+		<echo>Friendship-Framework woven into the application.</echo>
+		<echo>"Aber ich habe ihn zu meinem Freund gemacht, und jetzt ist er einzig in der Welt.", Der kleine Prinz</echo>
+		<!--
+		<echo>"Ohne Freunde ist unser Leben kein richtiges Leben.", Dante Alighieri</echo>
+		<echo>"Neue Freunde, neue Schmerzen.", Wolfang Amadeus Mozart</echo>
+		-->
+	</target>
+
+</project>

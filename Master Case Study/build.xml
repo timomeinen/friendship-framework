@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Master Case Study" default="build" basedir=".">
+
+	<!-- Bitte Pfade eintragen -->
+	<property name="ASPECTJ_BASE_DIR" value="/home/timo/.eclipse/org.eclipse.platform_3.3.0_1169174242/configuration/eclipse/plugins/"/>
+	<property name="ASPECTJ_VERSION" value="1.6.0.20080206212408"/>	
+	<property name="ASPECTJ_RT" value="${ASPECTJ_BASE_DIR}org.aspectj.runtime_${ASPECTJ_VERSION}/aspectjrt.jar"/>
+	<property name="ASPECTJ_WV"  value="${ASPECTJ_BASE_DIR}org.aspectj.weaver_${ASPECTJ_VERSION}/aspectjweaver.jar"/>
+	<property name="ASPECTJ_TO"  value="/home/timo/opt/aspectj1.5/lib/aspectjtools.jar"/>
+
+	<property name="JDT_CORE" value="/usr/lib/eclipse-3.3/plugins/org.eclipse.jdt.core_3.3.1.v_780_R33x.jar" />
+	
+	<property name="SPOON" 			value="/home/timo/.eclipse/org.eclipse.platform_3.3.0_1169174242/configuration/eclipse/plugins/fr.inria.spoon_1.0.13/lib/spoon.jar" />
+	<property name="FRIENDSPOON" 	value="../FriendshipSpoon/lib/friendspoon.jar" />
+	
+	<property name="JSAP" value="/usr/share/jsap/lib/jsap.jar" />
+	
+	<property name="FRIENDSHIP_FRAMEWORK" location="../Friendship/dist/Friendship.jar"/>
+	<property name="spooned.dir" location="generated.friends"/>
+	<property name="bin.dir" location="bin"/>
+	
+	<target name="clean">
+		<echo>Cleaning:</echo>
+		<echo>=> ${bin.dir}</echo>
+		<delete dir="${bin.dir}" />
+		<echo>=> ${spooned.dir}</echo>
+		<delete dir="${spooned.dir}" />
+	</target>
+	
+	<target name="init">
+		<path id="ajde.classpath">
+			<pathelement path="${ASPECTJ_WV}" />
+			<pathelement path="${ASPECTJ_RT}" />
+			<pathelement path="${ASPECTJ_TO}" />
+		</path>
+		<taskdef resource="org/aspectj/tools/ant/taskdefs/aspectjTaskdefs.properties">
+			<classpath refid="ajde.classpath" />
+		</taskdef>
+	</target>
+		
+	<target name="MakeFriends">
+		<path id="spoon.classpath">
+			<pathelement path="${SPOON}"/>
+			<pathelement path="${FRIENDSPOON}"/>
+			<pathelement path="${FRIENDSHIP_FRAMEWORK}"/>
+			<pathelement path="${JSAP}"/>
+			<pathelement path="${JDT_CORE}"/>
+		</path>
+		<taskdef name="spoon" classname="spoon.SpoonTask" classpathref="spoon.classpath" />
+		<spoon classpathref="spoon.classpath" verbose="true" output="${spooned.dir}" fork="false">
+			<sourceSet dir="src" />
+			<processor type="de.timomeinen.master.friendship.spoon.FriendSpoon"/>
+        </spoon>
+		<echo>Friendly access created.</echo>
+	</target>
+	
+	
+	<target name="build" depends="init,MakeFriends">
+		<delete dir="${bin.dir}" />
+		<mkdir dir="${bin.dir}" />
+		<path id="user.classpath">
+			<!-- add additional classpath entries here -->
+			<pathelement path="${FRIENDSHIP_FRAMEWORK}" />
+			<pathelement path="lib/hibernate3.jar" />
+		</path>
+		<path id="aspect.classpath">
+			<!-- Friendship Framework Aspekte -->
+			<pathelement path="${FRIENDSHIP_FRAMEWORK}" />
+		</path>
+		<!-- read additional ajc options from a file if required -->
+		<property name="ajcArgFile" value="" />
+		<!-- fork the compiler -->
+		<iajc destDir="${bin.dir}" failonerror="true" argfiles="" verbose="true" fork="true" maxmem="512m" source="1.5">
+			<forkclasspath refid="ajde.classpath" />
+			<forkclasspath refid="user.classpath" />
+			<aspectpath refid="aspect.classpath" />
+			<src path="${spooned.dir}" />
+		</iajc>
+		<echo>Friendship-Framework woven into the application.</echo>
+		<echo>--</echo>
+		<echo>"Aber ich habe ihn zu meinem Freund gemacht,</echo>
+		<echo>und jetzt ist er einzig in der Welt.", Der kleine Prinz</echo>
+		<!--
+		<echo>"Ohne Freunde ist unser Leben kein richtiges Leben.", Dante Alighieri</echo>
+		<echo>"Neue Freunde, neue Schmerzen.", Wolfang Amadeus Mozart</echo>
+		-->
+	</target>
+
+</project>

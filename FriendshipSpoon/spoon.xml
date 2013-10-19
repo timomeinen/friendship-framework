@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE spoon SYSTEM "spoonlet.dtd">
+<spoon>
+  <processor name="Friend Annotation Processor"
+    class="de.timomeinen.master.friendship.spoon.FriendSpoon" active="true"
+    doc="Turns private to public">
+  </processor>
+ </spoon>
