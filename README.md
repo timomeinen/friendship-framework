@@ -22,7 +22,6 @@ benötigt:
 - AspectJ Development Tools (AJDT) (http://eclipse.org/ajdt)
 - SpoonJDT (http://spoon.gforge.inria.fr)
 
-
 Friendship
 ----------
 Dies ist das Framework mit seinen aspektorientierten Teilen.
